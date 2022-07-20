@@ -18,3 +18,60 @@ y devuelva una matriz
 No debería importarte el orden de los equipos en el partido, 
 ni el orden de los partidos en la ronda. 
 Sólo deberían importarte las reglas del torneo
+
+
+```php
+
+function buildMatches($numero){
+    $aFixtures = [];
+    $crucesxEquipo = [];
+    $paso = 1;
+    for($i=1;$i<$numero;$i++){// numero de jorndas
+        $fixturexJornada = [];
+        $equiposEstaJornada = [];
+        for($j=1; $j<=$numero; $j++){// numero de equipos
+            if(count($fixturexJornada) >= intval($numero / 2)){
+                break;
+            }
+            if(in_array($j, $equiposEstaJornada)){
+               continue;
+            }
+            if(!isset($crucesxEquipo[$j])){
+                $crucesxEquipo[$j] = [];
+            }
+            $equipoActual = validarNoMayoraNumero($j + $paso, $numero, $equiposEstaJornada, $j);
+            if($equipoActual!==$j && !in_array($equipoActual, $crucesxEquipo[$j])){
+                $crucesxEquipo[$j][] = $equipoActual;
+                $fixturexJornada[] = [$j, $equipoActual];
+                $equiposEstaJornada[] = $j;
+                $equiposEstaJornada[] = $equipoActual;
+            }
+        }
+        $paso++;
+        $aFixtures[] = $fixturexJornada;
+    }
+    return $aFixtures;
+}
+
+function validarNoMayoraNumero($equipoActual, $numero, $equiposEstaJornada, $retador){
+    $nuevoEquipoActual = $equipoActual;
+    if($equipoActual>$numero){
+        $nuevoEquipoActual = $equipoActual - $numero;    
+    }
+    if(in_array($nuevoEquipoActual, $equiposEstaJornada)){
+        for($i=1; $i<=$numero; $i++){
+            if($i === $retador){
+                continue;
+            }
+            if(!in_array($i, $equiposEstaJornada)){
+                $nuevoEquipoActual = $i;
+                break;
+            }
+        }
+    }
+    return $nuevoEquipoActual;
+}
+
+var_dump(buildMatches(6));
+
+```
