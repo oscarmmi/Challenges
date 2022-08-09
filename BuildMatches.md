@@ -22,56 +22,22 @@ Sólo deberían importarte las reglas del torneo
 
 ```php
 
-function buildMatches($numero){
-    $aFixtures = [];
-    $crucesxEquipo = [];
-    $paso = 1;
-    for($i=1;$i<$numero;$i++){// numero de jorndas
-        $fixturexJornada = [];
-        $equiposEstaJornada = [];
-        for($j=1; $j<=$numero; $j++){// numero de equipos
-            if(count($fixturexJornada) >= intval($numero / 2)){
-                break;
-            }
-            if(in_array($j, $equiposEstaJornada)){
-               continue;
-            }
-            if(!isset($crucesxEquipo[$j])){
-                $crucesxEquipo[$j] = [];
-            }
-            $equipoActual = validarNoMayoraNumero($j + $paso, $numero, $equiposEstaJornada, $j);
-            if($equipoActual!==$j && !in_array($equipoActual, $crucesxEquipo[$j])){
-                $crucesxEquipo[$j][] = $equipoActual;
-                $fixturexJornada[] = [$j, $equipoActual];
-                $equiposEstaJornada[] = $j;
-                $equiposEstaJornada[] = $equipoActual;
-            }
-        }
-        $paso++;
-        $aFixtures[] = $fixturexJornada;
-    }
-    return $aFixtures;
+$players = array('A','B','C','D');
+$matches = array();
+
+foreach($players as $k){
+	foreach($players as $j){
+		if($k == $j){
+			continue;
+		}
+		$z = array($k,$j);
+		sort($z);
+		if(!in_array($z,$matches)){
+			$matches[] = $z;
+		}
+	}
 }
 
-function validarNoMayoraNumero($equipoActual, $numero, $equiposEstaJornada, $retador){
-    $nuevoEquipoActual = $equipoActual;
-    if($equipoActual>$numero){
-        $nuevoEquipoActual = $equipoActual - $numero;    
-    }
-    if(in_array($nuevoEquipoActual, $equiposEstaJornada)){
-        for($i=1; $i<=$numero; $i++){
-            if($i === $retador){
-                continue;
-            }
-            if(!in_array($i, $equiposEstaJornada)){
-                $nuevoEquipoActual = $i;
-                break;
-            }
-        }
-    }
-    return $nuevoEquipoActual;
-}
-
-var_dump(buildMatches(6));
+print_r($matches);
 
 ```
